@@ -4,58 +4,86 @@ const winningCombos = {
   paper: { win: 'rock', lose: 'scissors' }
 }
 
+function displayScore(scores) {
+  console.log(`Player: ${scores.player} | Computer: ${scores.computer}`)
+}
+
+function displayMatchResults(scores, matchResults, roundsToPlay, roundNumber) {
+  displayScore(scores);
+  console.log(`Round #${roundNumber}/${roundsToPlay}: ${matchResults}`);
+}
+
+function displayEndMessage(scores, matchHistory) {
+  console.log(`----------------\nRound breakdown:\n`);
+  matchHistory.forEach((round, index) => console.log(`Round #${index + 1}: ${round}`));
+  
+  if (scores.player > scores.computer) {
+    console.log(`Overall Results: Player beats computer ${scores.player} to ${scores.computer}!`);
+  } else if (scores.computer > scores.player) {
+    console.log(`Overall Results: Computer beats player ${scores.computer} to ${scores.player}!`);
+  } else {
+    console.log(`Overall Results: It's a tie! ${scores.player} to ${scores.computer}`);
+  }
+}
+
 function computerPlay() {
   const moves = ['rock', 'paper', 'scissors'];
 
   return moves[Math.floor(Math.random() * moves.length)];
 }
 
-function playRound(playerSelection, computerSelection) {
+function playRound(playerSelection, computerSelection, scores, matchHistory) {
   if (winningCombos[playerSelection].win === computerSelection) {
-    return { winner: 'player', winningMove: playerSelection, losingMove: computerSelection};
+    scores.player++;
+    matchHistory.push(`The player wins! ${playerSelection} beats ${computerSelection}`);
   } else if (winningCombos[computerSelection].win === playerSelection) {
-    return { winner: 'computer', winningMove: computerSelection, losingMove: playerSelection};
+    scores.computer++;
+    matchHistory.push(`The player loses. ${playerSelection} loses to ${computerSelection}`);
   } else {
-    return 'tie';
+    matchHistory.push("It's a tie!");
   }
 }
 
 function game() {
   const scores = { player: 0, computer: 0 };
   const matchHistory = [];
-  const moves = ['rock', 'paper', 'scissors'];
-  
+  let gameOver = false;
   let roundsToPlay = 5;
-  let playerSelection = prompt('Which move would you like to make? rock, paper, or scissors?').toLowerCase();
+  let roundNumber = 1;
 
-  while (!moves.includes(playerSelection)) {
-    alert(`${playerSelection} is not a valid choice.`);
-    playerSelection = prompt('Which move would you like to make? rock, paper, or scissors?');
-  }
+  (function displayChoices() {
+    const btnsContainer = document.createElement('div');
+    const rockBtn = document.createElement('button');
+    const paperBtn = document.createElement('button');
+    const scissorsBtn = document.createElement('button');
+  
+    btnsContainer.id = 'btns-container';
+    rockBtn.id = 'rock-btn';
+    paperBtn.id = 'paper-btn';
+    scissorsBtn.id = 'scissors-btn';
+  
+    rockBtn.textContent = 'rock';
+    paperBtn.textContent = 'paper';
+    scissorsBtn.textContent = 'scissors';
+  
+    [rockBtn, paperBtn, scissorsBtn].forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (gameOver) return;
 
-  while (roundsToPlay > 0) {
-    let { winner, winningMove, losingMove } = playRound(playerSelection, computerPlay());
-     
-    if (winner === 'player' || winner === 'computer') {
-      winner === 'player' ? scores.player++ : scores.computer++; 
-      matchHistory.push(`The ${winner} wins! ${winningMove} beats ${losingMove}`);
-    } else {
-      matchHistory.push("It's a tie!");
-    }
-    
-    roundsToPlay--;
-  }
+        playRound(btn.textContent, computerPlay(), scores, matchHistory);
+        displayMatchResults(scores, matchHistory[matchHistory.length - 1], roundsToPlay, roundNumber);
+        roundNumber++;
 
-  console.log(`Round breakdown:\n`);
-  matchHistory.forEach(round => console.log(round));
-
-  if (scores.player > scores.computer) {
-    return `Player beats computer ${scores.player} to ${scores.computer}!`;
-  } else if (scores.computer > scores.player) {
-    return `Computer beats player ${scores.computer} to ${scores.player}!`;
-  } else {
-    return `It's a tie! ${scores.player} to ${scores.computer}`;
-  }
+        if (roundNumber > roundsToPlay) {
+          displayEndMessage(scores, matchHistory);
+          gameOver = true;
+        }
+      });
+      btnsContainer.appendChild(btn);
+    });
+  
+    document.querySelector('body').appendChild(btnsContainer);
+  })();
 }
 
-console.log(game());
+game();
