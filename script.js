@@ -5,12 +5,31 @@ const winningCombos = {
 }
 
 function displayScore(scores) {
-  console.log(`Player: ${scores.player} | Computer: ${scores.computer}`)
+  return `Player: ${scores.player} | Computer: ${scores.computer}`;
 }
 
 function displayMatchResults(scores, matchResults, roundsToPlay, roundNumber) {
-  displayScore(scores);
-  console.log(`Round #${roundNumber}/${roundsToPlay}: ${matchResults}`);
+  let roundResultsContainer;
+
+  if (!document.querySelector('#round-results-container')) {
+    roundResultsContainer = document.createElement('div');
+    roundResultsContainer.id = 'round-results-container';
+
+    document.querySelector('body').appendChild(roundResultsContainer);
+  } else {
+    roundResultsContainer = document.querySelector('#round-results-container');
+  }
+
+  let roundResultsP = document.createElement('p');
+  let roundScoresP = document.createElement('p');
+
+  roundResultsP.classList.add('round-results');
+  roundScoresP.classList.add('round-scores');
+
+  roundResultsP.textContent = `Round #${roundNumber}/${roundsToPlay}: ${matchResults}`;
+  roundScoresP.textContent = `Player: ${scores.player} | Computer: ${scores.computer}`;
+
+  [roundResultsP, roundScoresP].forEach(p => roundResultsContainer.appendChild(p));
 }
 
 function displayEndMessage(scores, matchHistory) {
