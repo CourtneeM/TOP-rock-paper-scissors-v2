@@ -13,11 +13,11 @@ function displayMatchResults(scores, matchResults, roundsToPlay, roundNumber) {
 
   if (!document.querySelector('#round-results-container')) {
     roundResultsContainer = document.createElement('div');
-    roundResultsContainer.id = 'round-results-container';
+    roundResultsContainer.id = `round-${roundNumber}-results-container`;
 
     document.querySelector('body').appendChild(roundResultsContainer);
   } else {
-    roundResultsContainer = document.querySelector('#round-results-container');
+    roundResultsContainer = document.querySelector(`#round-${roundNumber}-results-container`);
   }
 
   let roundResultsP = document.createElement('p');
@@ -32,17 +32,37 @@ function displayMatchResults(scores, matchResults, roundsToPlay, roundNumber) {
   [roundResultsP, roundScoresP].forEach(p => roundResultsContainer.appendChild(p));
 }
 
-function displayEndMessage(scores, matchHistory) {
-  console.log(`----------------\nRound breakdown:\n`);
-  matchHistory.forEach((round, index) => console.log(`Round #${index + 1}: ${round}`));
+function displayEndMessage(scores, roundHistory) {
+  const gameResultsContainer = document.createElement('div');
+  let roundBreakdownP = document.createElement('p');
+  let roundHistoryContainer = document.createElement('div');
+  let gameResultsP = document.createElement('p');
+
+  gameResultsContainer.id = 'game-results-container';
+  roundBreakdownP.id = 'round-breakdown';
+  roundHistoryContainer.id = 'round-history-container';
+  
+  roundBreakdownP.textContent = 'Round breakdown:';
+  
+  roundHistory.forEach((round, index) => {
+    const roundHistoryP = document.createElement('p');
+
+    roundHistoryP.classList.add('round-history');
+    roundHistoryP.textContent = `Round #${index + 1}: ${round}`;
+
+    roundHistoryContainer.appendChild(roundHistoryP);
+  });
   
   if (scores.player > scores.computer) {
-    console.log(`Overall Results: Player beats computer ${scores.player} to ${scores.computer}!`);
+    gameResultsP.textContent = `Overall Results: Player beats computer ${scores.player} to ${scores.computer}!`;
   } else if (scores.computer > scores.player) {
-    console.log(`Overall Results: Computer beats player ${scores.computer} to ${scores.player}!`);
+    gameResultsP.textContent = `Overall Results: Computer beats player ${scores.computer} to ${scores.player}!`;
   } else {
-    console.log(`Overall Results: It's a tie! ${scores.player} to ${scores.computer}`);
+    gameResultsP.textContent = `Overall Results: It's a tie! ${scores.player} to ${scores.computer}`;
   }
+
+  [roundBreakdownP, roundHistoryContainer, gameResultsP].forEach(el => gameResultsContainer.appendChild(el));
+  document.querySelector('body').appendChild(gameResultsContainer);
 }
 
 function computerPlay() {
