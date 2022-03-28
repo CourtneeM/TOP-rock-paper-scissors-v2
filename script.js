@@ -10,26 +10,39 @@ function displayScore(scores) {
 
 function displayMatchResults(scores, matchResults, roundsToPlay, roundNumber) {
   let roundResultsContainer;
+  let roundResultsH2;
+  let roundResultsP;
+  let roundScoresP;
 
-  if (!document.querySelector('#round-results-container')) {
+  if (!document.querySelector('.round-results-container')) {
     roundResultsContainer = document.createElement('div');
-    roundResultsContainer.id = `round-${roundNumber}-results-container`;
+    roundResultsH2 = document.createElement('h2');
+    roundResultsP = document.createElement('p');
+    roundScoresP = document.createElement('p');
+    
+    roundResultsH2.id = 'round-results-h2';
+    roundResultsContainer.classList.add('round-results-container')
+    roundResultsP.classList.add('round-results');
+    roundScoresP.classList.add('round-scores');
 
+    [roundResultsH2, roundResultsP, roundScoresP].forEach(el => roundResultsContainer.appendChild(el));
     document.querySelector('body').appendChild(roundResultsContainer);
   } else {
-    roundResultsContainer = document.querySelector(`#round-${roundNumber}-results-container`);
+    roundResultsContainer = document.querySelector('.round-results-container');
+    roundResultsH2 = document.querySelector('#round-results-h2');
+    roundResultsP = document.querySelector('.round-results');
+    roundScoresP = document.querySelector('.round-scores');
   }
 
-  let roundResultsP = document.createElement('p');
-  let roundScoresP = document.createElement('p');
-
-  roundResultsP.classList.add('round-results');
-  roundScoresP.classList.add('round-scores');
-
-  roundResultsP.textContent = `Round #${roundNumber}/${roundsToPlay}: ${matchResults}`;
-  roundScoresP.textContent = `Player: ${scores.player} | Computer: ${scores.computer}`;
-
-  [roundResultsP, roundScoresP].forEach(p => roundResultsContainer.appendChild(p));
+  if (roundNumber < 5) { 
+    roundResultsH2.textContent = `Round: ${roundNumber}`;
+    roundResultsP.textContent = matchResults;
+    roundScoresP.textContent = `Player: ${scores.player} | Computer: ${scores.computer}`;
+  } else {
+    roundResultsH2.textContent = '';
+    roundResultsP.textContent = '';
+    roundScoresP.textContent = '';
+  }
 }
 
 function displayEndMessage(scores, roundHistory) {
@@ -92,19 +105,24 @@ function game() {
 
   (function displayChoices() {
     const btnsContainer = document.createElement('div');
+    const choicesP = document.createElement('p');
     const rockBtn = document.createElement('button');
     const paperBtn = document.createElement('button');
     const scissorsBtn = document.createElement('button');
   
     btnsContainer.id = 'btns-container';
+    choicesP.id = 'choices-p';
     rockBtn.id = 'rock-btn';
     paperBtn.id = 'paper-btn';
     scissorsBtn.id = 'scissors-btn';
   
+    choicesP.textContent = 'Choose your weapon...';
     rockBtn.textContent = 'rock';
     paperBtn.textContent = 'paper';
     scissorsBtn.textContent = 'scissors';
   
+    btnsContainer.appendChild(choicesP);
+
     [rockBtn, paperBtn, scissorsBtn].forEach(btn => {
       btn.addEventListener('click', () => {
         if (gameOver) return;
