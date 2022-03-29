@@ -4,6 +4,19 @@ const winningCombos = {
   paper: { win: 'rock', lose: 'scissors' }
 }
 
+function disableChoiceButtons() {
+  const choicesP = document.querySelector('#choices-p');
+  const choiceButtons = document.querySelectorAll('#btns-container button');
+
+  choicesP.textContent = 'Game Over';
+
+  [...choiceButtons].forEach(btn => {
+    btn.disabled = true;
+    btn.style.backgroundColor = '#eee';
+    btn.style.borderColor = '#aaa';
+  });
+}
+
 function displayScore(scores) {
   return `Player: ${scores.player} | Computer: ${scores.computer}`;
 }
@@ -46,14 +59,20 @@ function displayMatchResults(scores, matchResults, roundsToPlay, roundNumber) {
 }
 
 function displayEndMessage(scores, roundHistory) {
+  let roundResultsH2 = document.querySelector('#round-results-h2');
+  let roundResultsP = document.querySelector('.round-results');
+  let roundScoresP = document.querySelector('.round-scores');
+
   const gameResultsContainer = document.createElement('div');
   let roundBreakdownP = document.createElement('p');
   let roundHistoryContainer = document.createElement('div');
-  let gameResultsP = document.createElement('p');
 
   gameResultsContainer.id = 'game-results-container';
   roundBreakdownP.id = 'round-breakdown';
   roundHistoryContainer.id = 'round-history-container';
+
+  roundResultsH2.textContent = 'Results';
+  roundScoresP.textContent = `Player: ${scores.player} | Computer: ${scores.computer}`;
   
   roundBreakdownP.textContent = 'Round breakdown:';
   
@@ -67,14 +86,14 @@ function displayEndMessage(scores, roundHistory) {
   });
   
   if (scores.player > scores.computer) {
-    gameResultsP.textContent = `Overall Results: Player beats computer ${scores.player} to ${scores.computer}!`;
+    roundResultsP.textContent = `Player beats computer!`;
   } else if (scores.computer > scores.player) {
-    gameResultsP.textContent = `Overall Results: Computer beats player ${scores.computer} to ${scores.player}!`;
+    roundResultsP.textContent = `Computer beats player!`;
   } else {
-    gameResultsP.textContent = `Overall Results: It's a tie! ${scores.player} to ${scores.computer}`;
+    roundResultsP.textContent = `It's a tie!`;
   }
 
-  [roundBreakdownP, roundHistoryContainer, gameResultsP].forEach(el => gameResultsContainer.appendChild(el));
+  [roundBreakdownP, roundHistoryContainer].forEach(el => gameResultsContainer.appendChild(el));
   document.querySelector('body').appendChild(gameResultsContainer);
 }
 
@@ -127,12 +146,14 @@ function game() {
       btn.addEventListener('click', () => {
         if (gameOver) return;
 
+        console.log(roundNumber);
         playRound(btn.textContent, computerPlay(), scores, matchHistory);
         displayMatchResults(scores, matchHistory[matchHistory.length - 1], roundsToPlay, roundNumber);
         roundNumber++;
 
         if (roundNumber > roundsToPlay) {
           displayEndMessage(scores, matchHistory);
+          disableChoiceButtons();
           gameOver = true;
         }
       });
