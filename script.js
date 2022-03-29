@@ -31,37 +31,41 @@ function displayMatchResults(scores, matchResults, roundsToPlay, roundNumber) {
     roundResultsContainer = document.createElement('div');
     roundResultsH2 = document.createElement('h2');
     roundResultsP = document.createElement('p');
-    roundScoresP = document.createElement('p');
+    playerScoreP = document.createElement('p');
+    computerScoreP = document.createElement('p');
     
     roundResultsH2.id = 'round-results-h2';
     roundResultsContainer.classList.add('round-results-container')
     roundResultsP.classList.add('round-results');
-    roundScoresP.classList.add('round-scores');
+    playerScoreP.classList.add('round-scores');
+    computerScoreP.classList.add('round-scores');
 
-    [roundResultsH2, roundResultsP, roundScoresP].forEach(el => roundResultsContainer.appendChild(el));
+    [roundResultsH2, roundResultsP, playerScoreP, computerScoreP].forEach(el => roundResultsContainer.appendChild(el));
     document.querySelector('body').appendChild(roundResultsContainer);
   } else {
     roundResultsContainer = document.querySelector('.round-results-container');
     roundResultsH2 = document.querySelector('#round-results-h2');
     roundResultsP = document.querySelector('.round-results');
-    roundScoresP = document.querySelector('.round-scores');
+    [playerScoreP, computerScoreP] = [...document.querySelectorAll('.round-scores')];
   }
 
   if (roundNumber < 5) { 
     roundResultsH2.textContent = `Round: ${roundNumber}`;
     roundResultsP.textContent = matchResults;
-    roundScoresP.textContent = `Player: ${scores.player} | Computer: ${scores.computer}`;
+    playerScoreP.textContent = `Player: ${scores.player}`;
+    computerScoreP.textContent = `Computer: ${scores.computer}`;
   } else {
     roundResultsH2.textContent = '';
     roundResultsP.textContent = '';
-    roundScoresP.textContent = '';
+    playerScoreP.textContent = '';
+    computerScoreP.textContent = '';
   }
 }
 
 function displayEndMessage(scores, roundHistory) {
   let roundResultsH2 = document.querySelector('#round-results-h2');
   let roundResultsP = document.querySelector('.round-results');
-  let roundScoresP = document.querySelector('.round-scores');
+  let [playerScoreP, computerScoreP] = [...document.querySelectorAll('.round-scores')];
 
   const gameResultsContainer = document.createElement('div');
   let roundBreakdownP = document.createElement('p');
@@ -72,7 +76,8 @@ function displayEndMessage(scores, roundHistory) {
   roundHistoryContainer.id = 'round-history-container';
 
   roundResultsH2.textContent = 'Results';
-  roundScoresP.textContent = `Player: ${scores.player} | Computer: ${scores.computer}`;
+  playerScoreP.textContent = `Player: ${scores.player}`;
+  computerScoreP.textContent = `Computer: ${scores.computer}`;
   
   roundBreakdownP.textContent = 'Round breakdown:';
   

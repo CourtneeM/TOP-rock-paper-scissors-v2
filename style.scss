@@ -24,9 +24,13 @@ header {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 100px;
 
   #choices-p {
     flex-basis: 100%;
+    margin-bottom: 40px;
+    padding: 10px 0;
+    font-weight: 800;
     text-align: center;
   }
 
@@ -42,8 +46,26 @@ header {
 
 .round-results-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 50px;
+
+  #round-results-h2 {
+    flex-basis: 100%;
+    text-align: center;
+  }
+  
+  .round-results {
+    flex-basis: 100%;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .round-scores {
+    flex-basis: 200px;
+    font-weight: 800;
+    text-align: center;
+  }
 }
 
 #game-results-container {
